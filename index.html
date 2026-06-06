@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sản phẩm sáng tạo môn HCM202 - FPT University: Hành trình khám phá bản thân và hội nhập thế giới dựa trên tư tưởng Hồ Chí Minh.">
+    <title>Lotus Identity | Hành Trình Vươn Ra Thế Giới</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Canvas Particle Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-compass"></i></span>
+            <span class="logo-text">Lotus<span>Identity</span></span>
+        </div>
+        <nav class="nav">
+            <a href="#philosophy" class="nav-link">Triết Lý</a>
+            <a href="#assessment" class="nav-link">Tự Khảo Sát</a>
+            <a href="#roadmap" class="nav-link">Lộ Trình</a>
+            <a href="#about" class="nav-link">Về Chúng Tôi</a>
+        </nav>
+        <button class="btn-chat-toggle" id="header-chat-btn">
+            <i class="fa-solid fa-comments"></i> Trò chuyện AI
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content animate-on-scroll">
+            <div class="badge">Sản phẩm Sáng tạo HCM202</div>
+            <h1 class="hero-title">HIỂU MÌNH<br><span class="highlight">ĐỂ VƯƠN RA THẾ GIỚI</span></h1>
+            <p class="hero-subtitle">Văn hóa, Đạo đức và Con người là điểm tựa vững chắc để sinh viên tự tin vững bước hội nhập quốc tế.</p>
+            <div class="hero-actions">
+                <a href="#assessment" class="btn btn-primary">Bắt Đầu Khám Phá <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="#philosophy" class="btn btn-secondary">Tìm Hiểu Thêm</a>
+            </div>
+        </div>
+        <div class="hero-image-container animate-on-scroll">
+            <div class="hero-image-wrapper">
+                <img src="assets/hero_banner.png" alt="Lotus Identity Global Integration" class="hero-image">
+                <div class="glow-orb"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Philosophy Section -->
+    <section id="philosophy" class="section philosophy-section">
+        <div class="section-header animate-on-scroll">
+            <h2 class="section-title">Nền Tảng Định Vị Bản Thân</h2>
+            <p class="section-desc">Khi bước ra thế giới rộng lớn, điều làm nên sự khác biệt và giá trị bền vững của bạn chính là bản sắc bên trong.</p>
+        </div>
+
+        <div class="grid-container">
+            <!-- Card 1: Hiểu Mình -->
+            <div class="tilt-card glass-card animate-on-scroll" data-tilt>
+                <div class="card-image-bg" style="background-image: url('assets/self_reflection.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <span class="card-icon"><i class="fa-solid fa-yin-yang"></i></span>
+                    <h3 class="card-title">Hiểu Mình Là Ai</h3>
+                    <p class="card-text">Nhận thức rõ năng lực, đam mê và các điểm yếu cá nhân. Đặt gốc rễ từ tư tưởng rèn luyện con người toàn diện.</p>
+                </div>
+            </div>
+
+            <!-- Card 2: Văn Hóa & Đạo Đức -->
+            <div class="tilt-card glass-card animate-on-scroll" data-tilt>
+                <div class="card-image-bg" style="background-image: url('assets/culture_compass.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <span class="card-icon"><i class="fa-solid fa-dharmachakra"></i></span>
+                    <h3 class="card-title">Văn Hóa & Đạo Đức</h3>
+                    <p class="card-text">Lấy đạo đức (Cần, Kiệm, Liêm, Chính) làm gốc, văn hóa làm nền tảng tinh thần giữ vững bản sắc Việt.</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Vươn Ra Thế Giới -->
+            <div class="tilt-card glass-card animate-on-scroll" data-tilt>
+                <div class="card-image-bg" style="background-image: url('assets/global_path.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <span class="card-icon"><i class="fa-solid fa-earth-americas"></i></span>
+                    <h3 class="card-title">Hội Nhập Toàn Cầu</h3>
+                    <p class="card-text">Tự tin tiếp thu tinh hoa nhân loại và đóng góp giá trị của Việt Nam vào môi trường đa văn hóa toàn cầu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Self Assessment Quiz & Radar Chart Section -->
+    <section id="assessment" class="section assessment-section">
+        <div class="section-header animate-on-scroll">
+            <h2 class="section-title">Trắc Nghiệm Bản Sắc</h2>
+            <p class="section-desc">Thử thách bản thân qua 5 câu hỏi nhanh để vẽ nên biểu đồ Radar định vị khả năng hội nhập của chính bạn.</p>
+        </div>
+
+        <div class="assessment-container glass-card animate-on-scroll">
+            <div class="quiz-panel">
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quiz-progress"></div>
+                </div>
+                <div class="quiz-header">
+                    <span class="quiz-question-num" id="question-number">Câu hỏi 1/5</span>
+                </div>
+                
+                <!-- Questions Container -->
+                <div id="quiz-question-container">
+                    <!-- Questions will be injected here dynamically -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="quiz-prev-btn" disabled><i class="fa-solid fa-chevron-left"></i> Trước</button>
+                    <button class="btn btn-primary" id="quiz-next-btn">Tiếp Theo <i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="chart-panel">
+                <h3 class="chart-title">La Bàn Hội Nhập Của Bạn</h3>
+                <div class="chart-wrapper">
+                    <!-- SVG Radar Chart -->
+                    <svg id="radar-chart" viewBox="0 0 400 400" width="100%" height="100%">
+                        <!-- Grid lines and polygon will be generated dynamically by JS -->
+                    </svg>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="legend-color culture"></span> Văn Hóa</div>
+                    <div class="legend-item"><span class="legend-color ethics"></span> Đạo Đức</div>
+                    <div class="legend-item"><span class="legend-color learning"></span> Tự Học</div>
+                    <div class="legend-item"><span class="legend-color willpower"></span> Bản Lĩnh</div>
+                    <div class="legend-item"><span class="legend-color integration"></span> Hội Nhập</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Integration Roadmap Section -->
+    <section id="roadmap" class="section roadmap-section">
+        <div class="section-header animate-on-scroll">
+            <h2 class="section-title">Hành Trình Vươn Mình</h2>
+            <p class="section-desc">Quy trình rèn luyện để chuyển hóa từ tự nhận thức đến hội nhập quốc tế bền vững.</p>
+        </div>
+
+        <div class="timeline">
+            <!-- Timeline Item 1 -->
+            <div class="timeline-item animate-on-scroll">
+                <div class="timeline-dot">1</div>
+                <div class="timeline-content glass-card">
+                    <h3 class="timeline-title">Thấu Hiểu Bản Thân (Self-Awareness)</h3>
+                    <p class="timeline-text">Dành thời gian suy ngẫm, thực hiện khảo sát tính cách và giá trị. Định vị rõ điểm mạnh chuyên môn và nền tảng đạo đức của bản thân.</p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="timeline-item animate-on-scroll">
+                <div class="timeline-dot">2</div>
+                <div class="timeline-content glass-card">
+                    <h3 class="timeline-title">Bồi Đắp Bản Sắc (Cultural Anchoring)</h3>
+                    <p class="timeline-text">Tìm hiểu sâu về truyền thống lịch sử, văn hóa và tư tưởng đạo đức dân tộc. Đây chính là "chân đế" giúp bạn không bị hòa tan khi ra thế giới.</p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="timeline-item animate-on-scroll">
+                <div class="timeline-dot">3</div>
+                <div class="timeline-content glass-card">
+                    <h3 class="timeline-title">Rèn Luyện Bản Lĩnh (Willpower & Skill)</h3>
+                    <p class="timeline-text">Nâng cao ngoại ngữ, kỹ năng số và tinh thần tự học bền bỉ theo gương Bác Hồ. Luôn giữ thái độ cầu thị và rèn luyện thể chất, ý chí sắt đá.</p>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="timeline-item animate-on-scroll">
+                <div class="timeline-dot">4</div>
+                <div class="timeline-content glass-card">
+                    <h3 class="timeline-title">Tự Tin Hội Nhập (Global Citizenship)</h3>
+                    <p class="timeline-text">Tham gia các kỳ học nước ngoài, dự án quốc tế, trao đổi văn hóa. Mang hình ảnh Việt Nam giới thiệu tới bạn bè quốc tế một cách tự tin nhất.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section / Footer Info -->
+    <section id="about" class="section about-section">
+        <div class="about-container glass-card animate-on-scroll">
+            <div class="about-info">
+                <h3>Về Dự Án Sáng Tạo</h3>
+                <p>Website này là sản phẩm sáng tạo của Nhóm học tập môn HCM202 (Tư tưởng Hồ Chí Minh) - Trường Đại học FPT. Chúng tôi hướng tới việc số hóa bài học lý thuyết chính trị thành một công cụ trực quan hóa giúp sinh viên dễ dàng định vị bản thân và rèn luyện đạo đức, chuẩn bị hành trang hội nhập toàn cầu vững chắc.</p>
+                <div class="project-details">
+                    <p><strong>Môn học:</strong> HCM202 - Tư tưởng Hồ Chí Minh</p>
+                    <p><strong>Đơn vị:</strong> Trường Đại học FPT (FPT University)</p>
+                    <p><strong>Chủ đề nhóm:</strong> “Hiểu mình để vươn ra thế giới: vai trò của văn hóa, đạo đức và con người trong phát triển cá nhân hiện nay”</p>
+                </div>
+            </div>
+            <div class="about-team">
+                <h3>Nhóm Thực Hiện</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <span class="member-avatar"><i class="fa-solid fa-user-tie"></i></span>
+                        <div class="member-info">
+                            <h4>Thành Viên Nhóm</h4>
+                            <p>FPT Student</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <span class="member-avatar"><i class="fa-solid fa-code"></i></span>
+                        <div class="member-info">
+                            <h4>Developer & Designer</h4>
+                            <p>Phát triển UI/UX Web</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 HCM202 Group Project - FPT University. Bảo lưu mọi quyền.</p>
+    </footer>
+
+    <!-- Floating AI Chatbot Container -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <div class="chat-bot-info">
+                <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div>
+                    <h4 class="chat-name">AI Mentor</h4>
+                    <span class="chat-status"><span class="status-dot"></span> Đang trực tuyến</span>
+                </div>
+            </div>
+            <button class="btn-chat-close" id="chat-close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Messages will be injected here -->
+        </div>
+        <div class="chatbot-suggestions" id="chatbot-suggestions">
+            <!-- Quick questions will be generated here -->
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" id="chat-input" placeholder="Hỏi AI Mentor về hội nhập bản sắc..." autocomplete="off">
+            <button id="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- AI Chatbot Floating Trigger Button -->
+    <button class="chatbot-trigger" id="chatbot-trigger">
+        <i class="fa-solid fa-comments"></i>
+        <span class="trigger-tooltip">Hỏi AI Mentor</span>
+    </button>
+
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
