@@ -3,13 +3,55 @@
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     init3DTilt();
+    initTabNavigation();
     initQuiz();
     initChatbot();
+    initMinigame();
     initScrollAnimations();
 });
 
 /* ==========================================================================
-   1. Canvas Particle Background (Golden Lotus Seeds)
+   1. Tab Navigation Management (SPA Architecture)
+   ========================================================================== */
+function initTabNavigation() {
+    const tabs = document.querySelectorAll('.nav-tab');
+    const contents = document.querySelectorAll('.tab-content');
+    const switchBtns = document.querySelectorAll('.switch-tab-btn');
+
+    function switchTab(tabId) {
+        // Remove active class from all tabs & contents
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        // Add active to targeted tab & content
+        const targetTab = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+        const targetContent = document.getElementById(tabId);
+
+        if (targetTab && targetContent) {
+            targetTab.classList.add('active');
+            targetContent.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetId = tab.getAttribute('data-tab');
+            switchTab(targetId);
+        });
+    });
+
+    // In-page CTA tab switch buttons
+    switchBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            switchTab(targetId);
+        });
+    });
+}
+
+/* ==========================================================================
+   2. Canvas Particle Background (Golden Lotus Seeds)
    ========================================================================== */
 function initParticles() {
     const canvas = document.getElementById('particle-canvas');
@@ -19,34 +61,28 @@ function initParticles() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    // Handle Resize
     window.addEventListener('resize', () => {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
     });
 
-    // Particle Object
     class Particle {
         constructor() {
             this.x = Math.random() * width;
-            this.y = Math.random() * height + height; // Start from bottom
-            this.size = Math.random() * 3 + 1; // Size 1px to 4px
-            this.speedY = -(Math.random() * 0.8 + 0.2); // Upward speed
-            this.speedX = Math.random() * 0.4 - 0.2; // Drifting speed
+            this.y = Math.random() * height + height;
+            this.size = Math.random() * 3 + 1;
+            this.speedY = -(Math.random() * 0.8 + 0.2);
+            this.speedX = Math.random() * 0.4 - 0.2;
             this.opacity = Math.random() * 0.5 + 0.1;
-            this.color = Math.random() > 0.5 ? 'hsl(38, 92%, 50%)' : 'hsl(340, 82%, 60%)'; // Gold or Pink
+            this.color = Math.random() > 0.5 ? 'hsl(38, 92%, 50%)' : 'hsl(340, 82%, 60%)';
         }
 
         update() {
             this.y += this.speedY;
             this.x += this.speedX;
-            
-            // Fade out near top
             if (this.y < 100) {
                 this.opacity -= 0.01;
             }
-
-            // Reset when invisible or off-screen
             if (this.y < 0 || this.opacity <= 0) {
                 this.x = Math.random() * width;
                 this.y = height + Math.random() * 50;
@@ -69,18 +105,15 @@ function initParticles() {
         }
     }
 
-    // Initialize Particles Array (limited to 60 for performance)
     function init() {
         particlesArray = [];
-        const numberOfParticles = Math.min(60, Math.floor((width * height) / 20000));
+        const numberOfParticles = Math.min(50, Math.floor((width * height) / 25000));
         for (let i = 0; i < numberOfParticles; i++) {
             particlesArray.push(new Particle());
-            // Pre-warm particles so they are already spread out
             particlesArray[i].y = Math.random() * height;
         }
     }
 
-    // Animation Loop
     function animate() {
         ctx.clearRect(0, 0, width, height);
         particlesArray.forEach(p => {
@@ -95,25 +128,23 @@ function initParticles() {
 }
 
 /* ==========================================================================
-   2. 3D Card Tilt Effect
+   3. 3D Card Tilt Effect
    ========================================================================== */
 function init3DTilt() {
     const cards = document.querySelectorAll('[data-tilt]');
     
-    // Check if device supports hover
     if (window.matchMedia('(hover: hover)').matches) {
         cards.forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; // x coordinate within card
-                const y = e.clientY - rect.top;  // y coordinate within card
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
                 
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                // Tilt calculation (Max tilt 12 degrees)
-                const rotateX = ((centerY - y) / centerY) * 12;
-                const rotateY = ((x - centerX) / centerX) * 12;
+                const rotateX = ((centerY - y) / centerY) * 10;
+                const rotateY = ((x - centerX) / centerX) * 10;
                 
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             });
@@ -126,7 +157,7 @@ function init3DTilt() {
 }
 
 /* ==========================================================================
-   3. Interactive Diagnostic Quiz & SVG Radar Chart
+   4. Diagnostic Quiz & SVG Radar Chart
    ========================================================================== */
 const QUIZ_QUESTIONS = [
     {
@@ -146,7 +177,7 @@ const QUIZ_QUESTIONS = [
         question: "Trong công việc nhóm hoặc thi cử, nếu phát hiện hành vi gian lận hoặc thiếu trung thực, bạn sẽ giải quyết ra sao?",
         options: [
             { text: "Bỏ qua vì cho rằng không liên quan đến mình và để tránh mất lòng bạn bè.", score: 4 },
-            { text: "Thẳng thắn trao đổi riêng với bạn để sửa đổi, hướng tới sự chính trực ('Liêm, Chính') trong học tập.", score: 10 },
+            { text: "Thẳng thắn trao đổi riêng với bạn để sửa đổi, hướng tới sự chính trực trong học tập.", score: 10 },
             { text: "Báo cáo ngay cho giảng viên mà không cần trao đổi hay tìm hiểu lý do.", score: 8 },
             { text: "Đồng lõa để cả nhóm đạt điểm cao hơn.", score: 2 }
         ]
@@ -193,10 +224,10 @@ function initQuiz() {
     const progressFill = document.getElementById('quiz-progress');
     const questionNumberLabel = document.getElementById('question-number');
     
+    if (!questionContainer) return;
+
     let currentQuestionIdx = 0;
     
-    // Scores configuration for Radar chart
-    // Categories: Culture, Ethics, Self-learning (learning), Willpower (willpower), Integration
     const userScores = {
         culture: 5,
         ethics: 5,
@@ -205,21 +236,16 @@ function initQuiz() {
         integration: 5
     };
     
-    // Track selected choices
     const selectedChoices = new Array(QUIZ_QUESTIONS.length).fill(null);
 
-    // Initial Chart Render
     renderRadarChart(userScores);
 
     function displayQuestion() {
         const currentQuestion = QUIZ_QUESTIONS[currentQuestionIdx];
-        
-        // Progress update
         const progressPercent = ((currentQuestionIdx + 1) / QUIZ_QUESTIONS.length) * 100;
         progressFill.style.width = `${progressPercent}%`;
         questionNumberLabel.textContent = `Câu hỏi ${currentQuestionIdx + 1}/${QUIZ_QUESTIONS.length}`;
         
-        // Question HTML
         let html = `
             <div class="quiz-question">${currentQuestion.question}</div>
             <div class="quiz-options">
@@ -238,30 +264,24 @@ function initQuiz() {
         html += `</div>`;
         questionContainer.innerHTML = html;
 
-        // Add Event Listeners to Options
         const optionsElements = questionContainer.querySelectorAll('.quiz-option');
         optionsElements.forEach(optEl => {
             optEl.addEventListener('click', () => {
                 const idx = parseInt(optEl.getAttribute('data-idx'));
                 selectedChoices[currentQuestionIdx] = idx;
                 
-                // Highlight option
                 optionsElements.forEach(el => el.classList.remove('selected'));
                 optEl.classList.add('selected');
                 
-                // Update score
                 const category = currentQuestion.category;
                 userScores[category] = currentQuestion.options[idx].score;
                 
-                // Update Radar Chart dynamically!
                 renderRadarChart(userScores);
             });
         });
 
-        // Prev Button state
         prevBtn.disabled = currentQuestionIdx === 0;
         
-        // Next Button text
         if (currentQuestionIdx === QUIZ_QUESTIONS.length - 1) {
             nextBtn.innerHTML = `Hoàn Thành <i class="fa-solid fa-check"></i>`;
         } else {
@@ -269,7 +289,6 @@ function initQuiz() {
         }
     }
 
-    // Navigation triggers
     prevBtn.addEventListener('click', () => {
         if (currentQuestionIdx > 0) {
             currentQuestionIdx--;
@@ -287,7 +306,6 @@ function initQuiz() {
             currentQuestionIdx++;
             displayQuestion();
         } else {
-            // Show complete summary modal or text update
             showQuizResult(userScores);
         }
     });
@@ -307,7 +325,6 @@ function showQuizResult(scores) {
     prevBtn.style.display = 'none';
     nextBtn.style.display = 'none';
 
-    // Calculate average
     const avg = ((scores.culture + scores.ethics + scores.learning + scores.willpower + scores.integration) / 5).toFixed(1);
     let advice = "";
     if (avg >= 8.5) {
@@ -328,26 +345,24 @@ function showQuizResult(scores) {
     `;
 }
 
-// Radar Chart Rendering inside SVG
 function renderRadarChart(scores) {
     const svg = document.getElementById('radar-chart');
-    svg.innerHTML = ''; // Clear previous SVG contents
+    if (!svg) return;
+    svg.innerHTML = '';
     
     const cx = 200;
     const cy = 200;
-    const maxR = 120;
+    const maxR = 125;
     const totalAxes = 5;
     
-    // Dimensions names mapped to scores keys
     const categories = [
-        { name: "Văn Hóa", key: "culture", color: "hsl(340, 82%, 60%)" },
-        { name: "Đạo Đức", key: "ethics", color: "hsl(38, 92%, 50%)" },
-        { name: "Tự Học", key: "learning", color: "hsl(190, 90%, 50%)" },
-        { name: "Bản Lĩnh", key: "willpower", color: "hsl(145, 80%, 50%)" },
-        { name: "Hội Nhập", key: "integration", color: "hsl(280, 80%, 65%)" }
+        { name: "Văn Hóa", key: "culture" },
+        { name: "Đạo Đức", key: "ethics" },
+        { name: "Tự Học", key: "learning" },
+        { name: "Bản Lĩnh", key: "willpower" },
+        { name: "Hội Nhập", key: "integration" }
     ];
     
-    // 1. Draw grid circles (concentric polygons/circles)
     const levels = 5;
     for (let level = 1; level <= levels; level++) {
         const r = (level / levels) * maxR;
@@ -358,20 +373,17 @@ function renderRadarChart(scores) {
             const y = cy + r * Math.sin(angle);
             points.push(`${x},${y}`);
         }
-        
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         poly.setAttribute('points', points.join(' '));
         poly.setAttribute('class', 'radar-grid');
         svg.appendChild(poly);
     }
     
-    // 2. Draw axes lines and labels
     categories.forEach((cat, i) => {
         const angle = (i * 2 * Math.PI / totalAxes) - Math.PI / 2;
-        
-        // Axis line
         const endX = cx + maxR * Math.cos(angle);
         const endY = cy + maxR * Math.sin(angle);
+        
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', cx);
         line.setAttribute('y1', cy);
@@ -380,10 +392,9 @@ function renderRadarChart(scores) {
         line.setAttribute('class', 'radar-axis');
         svg.appendChild(line);
         
-        // Label position (further out)
         const labelDistance = maxR + 25;
         const labelX = cx + labelDistance * Math.cos(angle);
-        const labelY = cy + labelDistance * Math.sin(angle) + 4; // micro-adjust height
+        const labelY = cy + labelDistance * Math.sin(angle) + 4;
         
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', labelX);
@@ -393,11 +404,10 @@ function renderRadarChart(scores) {
         svg.appendChild(label);
     });
     
-    // 3. Draw active data polygon
     const dataPoints = [];
     categories.forEach((cat, i) => {
         const angle = (i * 2 * Math.PI / totalAxes) - Math.PI / 2;
-        const score = scores[cat.key]; // 1 to 10
+        const score = scores[cat.key];
         const r = (score / 10) * maxR;
         const x = cx + r * Math.cos(angle);
         const y = cy + r * Math.sin(angle);
@@ -409,7 +419,6 @@ function renderRadarChart(scores) {
     dataPoly.setAttribute('class', 'radar-polygon');
     svg.appendChild(dataPoly);
     
-    // 4. Draw dots on the vertices
     categories.forEach((cat, i) => {
         const angle = (i * 2 * Math.PI / totalAxes) - Math.PI / 2;
         const score = scores[cat.key];
@@ -427,80 +436,71 @@ function renderRadarChart(scores) {
 }
 
 /* ==========================================================================
-   4. Mock AI Mentor Chatbot
+   5. Standalone AI Chatbot Interface Simulator
    ========================================================================== */
 const CHAT_QA_DATABASE = [
     {
-        keywords: ["văn hóa", "bản sắc", "giữ bản sắc", "hòa tan"],
-        response: "Giữ vững bản sắc văn hóa Việt Nam chính là cái 'gốc' vững chắc nhất giúp bạn không bị hòa tan khi ra thế giới. Hồ Chí Minh từng nhấn mạnh, văn hóa chính là nền tảng tinh thần của xã hội, vừa là mục tiêu vừa là động lực của sự phát triển. Hãy tự hào và lan tỏa văn hóa ẩm thực, trang phục, các truyền thống chính trực của dân tộc tới bạn bè quốc tế."
+        keywords: ["văn hóa", "bản sắc", "giữ bản sắc", "hòa tan", "bảo tồn"],
+        response: "Giữ vững bản sắc văn hóa Việt Nam chính là chiếc neo giúp bạn không bị hòa tan khi bước vào dòng chảy toàn cầu. Hồ Chí Minh chỉ ra văn hóa là nền tảng tinh thần của xã hội. Sinh viên FPT cần lấy lòng tự tôn dân tộc và chuẩn mực văn hóa ứng xử Việt Nam làm nền móng tự tin giao tiếp thế giới."
     },
     {
-        keywords: ["đạo đức", "đóng vai trò gì", "đạo đức hội nhập", "làm người"],
-        response: "Bác Hồ dạy: 'Có tài mà không có đức là người vô dụng, có đức mà không có tài thì làm việc gì cũng khó'. Trong hội nhập, đạo đức đóng vai trò làm thước đo giá trị uy tín cá nhân của bạn đối với cộng đồng quốc tế. Sự chính trực (Liêm, Chính), tính tôn trọng lẽ phải và tinh thần trách nhiệm chính là vũ khí mạnh nhất của bạn."
+        keywords: ["đạo đức", "đóng vai trò gì", "đạo đức cách mạng", "cần kiệm", "chính trực"],
+        response: "Bác Hồ nhấn mạnh: 'Có tài mà không có đức là người vô dụng, có đức mà không có tài thì làm việc gì cũng khó'. Trong bối cảnh hội nhập, đạo đức đóng vai trò làm thước đo độ uy tín của cá nhân và doanh nghiệp Việt Nam trên trường quốc tế. Việc thực hành trung thực và tôn trọng cam kết là chìa khóa thành công."
     },
     {
-        keywords: ["tự học", "học ngoại ngữ", "bác hồ tự học", "phát triển kỹ năng"],
-        response: "Hành trình vươn ra thế giới của Nguyễn Ái Quốc là minh chứng vĩ đại nhất của việc tự học. Người đã tự học tiếng Pháp, tiếng Anh, tiếng Trung... thông qua việc viết từ mới lên cánh tay khi làm phụ bếp, kiên trì học mọi lúc mọi nơi. Là sinh viên FPT, bạn có công nghệ số hỗ trợ, hãy tận dụng nó để tự nâng cấp năng lực mỗi ngày."
+        keywords: ["tự học", "học ngoại ngữ", "bác hồ tự học", "phát triển bản thân"],
+        response: "Hành trình vươn ra thế giới của Nguyễn Ái Quốc là một tấm gương tự học vĩ đại. Bác học ngoại ngữ mọi nơi: học từ đồng nghiệp, viết chữ lên cánh tay khi làm bếp. Ngày nay, sinh viên FPT có đầy đủ công nghệ AI hỗ trợ, tinh thần tự học càng đóng vai trò định đoạt tốc độ thích nghi của bạn."
     },
     {
-        keywords: ["tự tin", "giao tiếp", "sốc văn hóa", "áp lực", "khó khăn"],
-        response: "Để tự tin giao tiếp quốc tế, trước hết bạn phải 'hiểu mình' - biết rõ thế mạnh và chấp nhận những điểm chưa hoàn thiện. Khi gặp áp lực hay sốc văn hóa, hãy bình tĩnh nhìn nhận khó khăn như một bài test rèn luyện bản lĩnh con người ('gian nan rèn ý chí'). Hãy mở lòng chia sẻ và không ngừng học hỏi từ xung quanh."
+        keywords: ["sốc văn hóa", "áp lực", "khó khăn", "tự tin", "vấp ngã"],
+        response: "Khi gặp sốc văn hóa hay áp lực hội nhập, hãy nhớ câu thơ của Bác: 'Gian nan rèn luyện mới thành công'. Xem khó khăn là thuốc thử rèn ý chí bản lĩnh. Hãy chủ động giao tiếp, chia sẻ văn hóa song phương và giữ một thái độ cởi mở để tiếp thu tri thức mới."
     }
 ];
 
 function initChatbot() {
-    const trigger = document.getElementById('chatbot-trigger');
-    const container = document.getElementById('chatbot');
-    const closeBtn = document.getElementById('chat-close-btn');
-    const messagesContainer = document.getElementById('chatbot-messages');
-    const inputField = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('chat-send-btn');
-    const suggestionsContainer = document.getElementById('chatbot-suggestions');
-    const headerToggleBtn = document.getElementById('header-chat-btn');
+    const messagesContainer = document.getElementById('main-chat-messages');
+    const inputField = document.getElementById('main-chat-input');
+    const sendBtn = document.getElementById('main-chat-send-btn');
+    const suggestionsContainer = document.getElementById('main-chat-suggestions');
+
+    if (!messagesContainer) return;
 
     let botGreetingSent = false;
 
-    // Toggle Chatbot Window
-    function openChat() {
-        container.classList.add('active');
-        if (!botGreetingSent) {
-            sendGreeting();
-        }
-    }
-    
-    function closeChat() {
-        container.classList.remove('active');
+    // Trigger greeting when chat section loaded (using Mutation/Intersection or just simple tab click check)
+    // To make it simple, we listen to clicks on the AI tab button
+    const chatTabBtn = document.querySelector('.nav-tab[data-tab="tab-chat"]');
+    if (chatTabBtn) {
+        chatTabBtn.addEventListener('click', () => {
+            if (!botGreetingSent) {
+                sendGreeting();
+            }
+        });
     }
 
-    trigger.addEventListener('click', openChat);
-    headerToggleBtn.addEventListener('click', openChat);
-    closeBtn.addEventListener('click', closeChat);
-
-    // Send Default Greeting
     function sendGreeting() {
         botGreetingSent = true;
         showTypingIndicator();
         
         setTimeout(() => {
             removeTypingIndicator();
-            appendMessage("Xin chào! Tôi là **AI Mentor** đồng hành cùng bạn trên hành trình khám phá bản thân và hội nhập toàn cầu. Bạn muốn trao đổi về chủ đề gì nào?", "bot");
+            appendMessage("Xin chào! Tôi là **Lotus AI Mentor**. Tôi ở đây để hỗ trợ bạn định vị bản sắc và phát triển kỹ năng hội nhập quốc tế theo tư tưởng Hồ Chí Minh. Bạn có câu hỏi nào không?", "bot");
             renderSuggestions();
-        }, 1200);
+        }, 1000);
     }
 
-    // Suggestions Generator
     const suggestions = [
-        { label: "Làm sao để giữ bản sắc văn hóa Việt?", query: "văn hóa bản sắc giữ bản sắc" },
+        { label: "Làm sao giữ bản sắc Việt?", query: "giữ bản sắc văn hóa" },
         { label: "Đạo đức đóng vai trò gì khi hội nhập?", query: "đạo đức đóng vai trò gì" },
-        { label: "Bác Hồ tự học ngoại ngữ thế nào?", query: "tự học bác hồ học ngoại ngữ" },
-        { label: "Làm thế nào vượt qua sốc văn hóa?", query: "tự tin khó khăn áp lực" }
+        { label: "Bác Hồ tự học ngoại ngữ thế nào?", query: "bác hồ tự học ngoại ngữ" },
+        { label: "Làm thế nào vượt qua khó khăn sốc văn hóa?", query: "khó khăn sốc văn hóa áp lực" }
     ];
 
     function renderSuggestions() {
         suggestionsContainer.innerHTML = '';
         suggestions.forEach(s => {
             const btn = document.createElement('button');
-            btn.className = 'suggestion-btn';
+            btn.className = 'main-suggestion-btn';
             btn.textContent = s.label;
             btn.addEventListener('click', () => {
                 handleUserMessage(s.label, s.query);
@@ -509,7 +509,6 @@ function initChatbot() {
         });
     }
 
-    // Send Chat Logic
     function handleUserMessage(displayMsg, searchTerms = "") {
         if (!displayMsg.trim()) return;
 
@@ -520,8 +519,7 @@ function initChatbot() {
         
         showTypingIndicator();
         
-        // Match response
-        let matchedResponse = "Tôi hiểu ý bạn. Trong môn học HCM202, việc thấu hiểu bản thân ('Hiểu mình') chính là tiền đề then chốt. Đạo đức rèn luyện nhân cách, văn hóa đóng vai trò định hình bản sắc, giúp chúng ta hội nhập mà không hòa tan. Bạn có muốn hỏi sâu hơn về khía cạnh nào không?";
+        let matchedResponse = "Câu hỏi của bạn rất hay. Thực chất, trong môn học HCM202, Bác chỉ rõ 'Hiểu mình' chính là tự giác ngộ ý thức và sửa đổi hạn chế bản thân. Đạo đức, văn hóa và ý chí tự lực cánh sinh chính là hành trang vững nhất của con người thời đại mới. Bạn có muốn đi sâu vào mục tiêu tự học ngoại ngữ hay giữ gìn văn hóa truyền thống không?";
         
         for (const item of CHAT_QA_DATABASE) {
             if (item.keywords.some(kw => searchQuery.includes(kw))) {
@@ -533,8 +531,7 @@ function initChatbot() {
         setTimeout(() => {
             removeTypingIndicator();
             appendMessage(matchedResponse, "bot");
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }, 1500);
+        }, 1200);
     }
 
     sendBtn.addEventListener('click', () => {
@@ -547,36 +544,178 @@ function initChatbot() {
         }
     });
 
-    // Helper Functions
     function appendMessage(text, sender) {
         const msg = document.createElement('div');
-        msg.className = `chat-message ${sender}`;
-        
-        // Simple Markdown parsing for bold text
+        msg.className = `chat-bubble ${sender}`;
         const parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         msg.innerHTML = parsedText;
-        
         messagesContainer.appendChild(msg);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     function showTypingIndicator() {
         const ind = document.createElement('div');
-        ind.className = 'typing-indicator';
-        ind.id = 'chat-typing-indicator';
+        ind.className = 'chat-typing-indicator';
+        ind.id = 'main-chat-typing-indicator';
         ind.innerHTML = '<span></span><span></span><span></span>';
         messagesContainer.appendChild(ind);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     function removeTypingIndicator() {
-        const ind = document.getElementById('chat-typing-indicator');
+        const ind = document.getElementById('main-chat-typing-indicator');
         if (ind) ind.remove();
     }
 }
 
 /* ==========================================================================
-   5. Scroll triggered Viewport Animations
+   6. Minigame: Memory Pairing Card Game
+   ========================================================================== */
+const GAME_CARDS_DATA = [
+    // Pairs: { id, text, pairId, type: 'value' | 'explanation' }
+    { id: 1, text: "CẦN", pairId: 1, type: "value" },
+    { id: 2, text: "Siêng năng, chăm chỉ, lao động có kế hoạch và năng suất cao.", pairId: 1, type: "explanation" },
+    
+    { id: 3, text: "KIỆM", pairId: 2, type: "value" },
+    { id: 4, text: "Tiết kiệm thời gian, công sức, tiền bạc của mình và của chung.", pairId: 2, type: "explanation" },
+    
+    { id: 5, text: "LIÊM", pairId: 3, type: "value" },
+    { id: 6, text: "Trong sạch, luôn tôn trọng của công, không tham nhũng vị kỷ.", pairId: 3, type: "explanation" },
+    
+    { id: 7, text: "CHÍNH", pairId: 4, type: "value" },
+    { id: 8, text: "Thẳng thắn, đứng đắn, làm việc nghĩa, lánh xa việc ác xấu.", pairId: 4, type: "explanation" }
+];
+
+function initMinigame() {
+    const grid = document.getElementById('game-grid-cards');
+    const scoreVal = document.getElementById('game-score-val');
+    const statusMsg = document.getElementById('game-status-msg');
+    const resetBtn = document.getElementById('game-reset-btn');
+    const successPanel = document.getElementById('game-success-panel');
+    const successReplayBtn = document.getElementById('game-success-replay-btn');
+
+    if (!grid) return;
+
+    let flippedCards = [];
+    let matchedCount = 0;
+    let isBusy = false; // Lock flipping during mismatch check
+
+    // Shuffle Array Helper
+    function shuffle(array) {
+        let currentIndex = array.length, temp, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temp = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temp;
+        }
+        return array;
+    }
+
+    function setupGame() {
+        grid.innerHTML = '';
+        flippedCards = [];
+        matchedCount = 0;
+        isBusy = false;
+        scoreVal.textContent = '0';
+        statusMsg.textContent = 'Hãy chọn một thẻ bài để bắt đầu!';
+        successPanel.classList.remove('active');
+
+        // Shuffle cards
+        const gameCards = shuffle([...GAME_CARDS_DATA]);
+
+        // Generate HTML
+        gameCards.forEach(c => {
+            const cardEl = document.createElement('div');
+            cardEl.className = 'game-card';
+            cardEl.setAttribute('data-pair-id', c.pairId);
+            cardEl.setAttribute('data-id', c.id);
+            
+            cardEl.innerHTML = `
+                <div class="game-card-front"><i class="fa-solid fa-lotus"></i></div>
+                <div class="game-card-back">
+                    <span class="card-type-label">${c.type === 'value' ? 'Chuẩn mực' : 'Giải nghĩa'}</span>
+                    <span class="card-value" style="font-size: ${c.type === 'value' ? '1.5rem' : '0.82rem'}">${c.text}</span>
+                </div>
+            `;
+            
+            cardEl.addEventListener('click', () => handleCardClick(cardEl));
+            grid.appendChild(cardEl);
+        });
+    }
+
+    function handleCardClick(card) {
+        // Stop if clicking already flipped or matched card, or game is busy
+        if (isBusy || card.classList.contains('flipped') || card.classList.contains('matched')) {
+            return;
+        }
+
+        // Flip card
+        card.classList.add('flipped');
+        flippedCards.push(card);
+
+        statusMsg.textContent = 'Đang tìm thẻ ghép cặp tương ứng...';
+
+        if (flippedCards.length === 2) {
+            isBusy = true;
+            checkMatch();
+        }
+    }
+
+    function checkMatch() {
+        const card1 = flippedCards[0];
+        const card2 = flippedCards[1];
+        
+        const pairId1 = card1.getAttribute('data-pair-id');
+        const pairId2 = card2.getAttribute('data-pair-id');
+        
+        const id1 = card1.getAttribute('data-id');
+        const id2 = card2.getAttribute('data-id');
+
+        if (pairId1 === pairId2 && id1 !== id2) {
+            // MATCH!
+            setTimeout(() => {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                flippedCards = [];
+                matchedCount++;
+                scoreVal.textContent = matchedCount;
+                statusMsg.textContent = 'Chính xác! Cặp thẻ đã được ghép.';
+                isBusy = false;
+
+                // Check Win
+                if (matchedCount === GAME_CARDS_DATA.length / 2) {
+                    winGame();
+                }
+            }, 600);
+        } else {
+            // NOT A MATCH
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                flippedCards = [];
+                statusMsg.textContent = 'Chưa đúng rồi! Hãy thử cặp thẻ khác.';
+                isBusy = false;
+            }, 1200);
+        }
+    }
+
+    function winGame() {
+        statusMsg.textContent = 'Tuyệt vời! Bạn đã hoàn thành trò chơi.';
+        setTimeout(() => {
+            successPanel.classList.add('active');
+        }, 800);
+    }
+
+    resetBtn.addEventListener('click', setupGame);
+    successReplayBtn.addEventListener('click', setupGame);
+
+    setupGame();
+}
+
+/* ==========================================================================
+   7. Scroll triggered Viewport Animations
    ========================================================================== */
 function initScrollAnimations() {
     const animElements = document.querySelectorAll('.animate-on-scroll');
@@ -591,7 +730,7 @@ function initScrollAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('appear');
-                obs.unobserve(entry.target); // Trigger animation once
+                obs.unobserve(entry.target);
             }
         });
     }, observerOptions);
