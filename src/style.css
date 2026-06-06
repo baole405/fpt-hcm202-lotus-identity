@@ -1,25 +1,26 @@
-/* --- Lotus Identity Custom Design System & CSS Stylesheet --- */
+/* --- Lotus Identity by Slow - Light Mode Design System --- */
 
 :root {
-    /* Color Palette */
-    --bg-main: hsl(222, 47%, 7%);
-    --bg-glass: rgba(15, 23, 42, 0.65);
-    --bg-glass-heavy: rgba(10, 15, 30, 0.85);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --border-glass-glow: rgba(255, 107, 157, 0.25);
+    /* Color Palette - Premium Light Mode */
+    --bg-main: hsl(210, 30%, 98%);       /* Soft off-white / light slate */
+    --bg-glass: rgba(255, 255, 255, 0.75);
+    --bg-glass-heavy: rgba(255, 255, 255, 0.95);
+    --border-glass: rgba(15, 23, 42, 0.08);
+    --border-glass-glow: rgba(244, 63, 94, 0.25);
     
-    --primary: hsl(340, 82%, 60%);       /* Lotus Pink */
-    --primary-glow: rgba(244, 63, 94, 0.5);
-    --secondary: hsl(38, 92%, 50%);      /* Imperial Gold */
-    --secondary-glow: rgba(245, 158, 11, 0.4);
+    --primary: hsl(340, 80%, 55%);       /* Lotus Pink */
+    --primary-glow: rgba(244, 63, 94, 0.25);
+    --secondary: hsl(38, 90%, 45%);      /* Imperial Gold */
+    --secondary-glow: rgba(245, 158, 11, 0.25);
     
-    --text-primary: hsl(210, 40%, 98%);
-    --text-muted: hsl(215, 25%, 72%);
-    --text-dark: hsl(222, 47%, 12%);
+    --text-primary: hsl(222, 47%, 12%);  /* Deep slate / charcoal */
+    --text-muted: hsl(215, 16%, 47%);    /* Cool gray */
+    --text-light: hsl(210, 40%, 98%);
     
-    --card-shadow: 0 15px 35px -10px rgba(2, 6, 23, 0.7);
-    --neon-glow: 0 0 20px rgba(244, 63, 94, 0.25);
-    --neon-glow-gold: 0 0 20px rgba(245, 158, 11, 0.25);
+    --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+    --card-shadow-hover: 0 20px 40px rgba(15, 23, 42, 0.08), 0 1px 5px rgba(15, 23, 42, 0.03);
+    --neon-glow: 0 0 15px rgba(244, 63, 94, 0.15);
+    --neon-glow-gold: 0 0 15px rgba(245, 158, 11, 0.15);
     
     /* Font Families */
     --font-sans: 'Outfit', sans-serif;
@@ -54,7 +55,7 @@ body {
     background: var(--bg-main);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.1);
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -82,7 +83,8 @@ body {
     box-shadow: var(--card-shadow);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                 border-color 0.3s ease, 
-                box-shadow 0.3s ease;
+                box-shadow 0.3s ease,
+                background-color 0.3s ease;
 }
 
 .btn {
@@ -102,23 +104,25 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #e11d48);
+    background: var(--primary);
     color: white;
-    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.4);
+    box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
 }
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(244, 63, 94, 0.6);
+    background: hsl(340, 80%, 50%);
+    box-shadow: 0 6px 18px rgba(244, 63, 94, 0.4);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
+    background: white;
     color: var(--text-primary);
     border: 1px solid var(--border-glass);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(15, 23, 42, 0.02);
+    border-color: rgba(15, 23, 42, 0.15);
     transform: translateY(-3px);
 }
 
@@ -140,7 +144,7 @@ body {
     left: 0;
     right: 0;
     z-index: 100;
-    background: rgba(11, 15, 25, 0.75);
+    background: rgba(248, 250, 252, 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-glass);
 }
@@ -152,9 +156,7 @@ body {
 }
 .logo-icon {
     font-size: 1.8rem;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary);
     animation: rotateCompass 10s linear infinite;
 }
 .logo-text {
@@ -162,7 +164,7 @@ body {
     font-weight: 800;
     font-size: 1.5rem;
     letter-spacing: -0.5px;
-    color: white;
+    color: var(--text-primary);
 }
 .logo-text span {
     color: var(--primary);
@@ -189,14 +191,13 @@ body {
     transition: all 0.3s ease;
 }
 .nav-tab:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    background: rgba(15, 23, 42, 0.03);
 }
 .nav-tab.active {
-    color: white;
-    background: rgba(244, 63, 94, 0.1);
-    border-color: rgba(244, 63, 94, 0.3);
-    box-shadow: var(--neon-glow);
+    color: var(--primary);
+    background: rgba(244, 63, 94, 0.08);
+    border-color: rgba(244, 63, 94, 0.2);
 }
 
 /* --- SPA View Navigation Management --- */
@@ -233,9 +234,9 @@ body {
     align-items: flex-start;
 }
 .badge {
-    background: rgba(244, 63, 94, 0.1);
+    background: rgba(244, 63, 94, 0.08);
     color: var(--primary);
-    border: 1px solid rgba(244, 63, 94, 0.2);
+    border: 1px solid rgba(244, 63, 94, 0.15);
     padding: 6px 16px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -244,7 +245,6 @@ body {
     text-transform: uppercase;
     margin-bottom: 20px;
     display: inline-block;
-    box-shadow: 0 0 10px rgba(244, 63, 94, 0.1);
 }
 .hero-title {
     font-family: var(--font-serif);
@@ -252,13 +252,11 @@ body {
     line-height: 1.15;
     font-weight: 700;
     margin-bottom: 24px;
-    color: white;
+    color: var(--text-primary);
 }
 .hero-title .highlight {
     font-family: var(--font-sans);
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary); /* Solid color instead of gradient */
     font-weight: 800;
 }
 .hero-subtitle {
@@ -282,7 +280,7 @@ body {
     position: relative;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
     border: 1px solid var(--border-glass);
 }
 .hero-image {
@@ -299,7 +297,7 @@ body {
     height: 200px;
     background: var(--primary);
     filter: blur(120px);
-    opacity: 0.3;
+    opacity: 0.12;
     pointer-events: none;
     z-index: -1;
 }
@@ -317,7 +315,7 @@ body {
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
-    color: white;
+    color: var(--text-primary); /* Solid color */
 }
 .section-title::after {
     content: '';
@@ -366,7 +364,7 @@ body {
     z-index: -2;
 }
 .tilt-card:hover .card-image-bg {
-    transform: scale(1.08);
+    transform: scale(1.06);
 }
 .card-overlay {
     position: absolute;
@@ -374,11 +372,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(11, 15, 25, 0.95) 20%, rgba(11, 15, 25, 0.5) 60%, rgba(11, 15, 25, 0.1));
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.98) 25%, rgba(255, 255, 255, 0.5) 65%, rgba(255, 255, 255, 0.1));
     z-index: -1;
 }
 .card-content {
-    transform: translateZ(40px);
+    transform: translateZ(30px);
     transition: transform 0.5s ease;
 }
 .card-icon {
@@ -388,31 +386,31 @@ body {
     width: 55px;
     height: 55px;
     border-radius: 50px;
-    background: rgba(255, 255, 255, 0.05);
+    background: white;
     border: 1px solid var(--border-glass);
     color: var(--primary);
     font-size: 1.5rem;
     margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
     transition: all 0.3s;
 }
 .tilt-card:hover .card-icon {
     background: var(--primary);
     color: white;
-    box-shadow: var(--neon-glow);
 }
 .card-title {
     font-size: 1.35rem;
     font-weight: 700;
     margin-bottom: 10px;
-    color: white;
+    color: var(--text-primary);
 }
 .card-text {
     font-size: 0.92rem;
     color: var(--text-muted);
 }
 .tilt-card:hover {
-    border-color: var(--border-glass-glow);
-    box-shadow: 0 15px 35px rgba(244, 63, 94, 0.15);
+    border-color: rgba(244, 63, 94, 0.2);
+    box-shadow: var(--card-shadow-hover);
 }
 
 /* Timeline Vertical */
@@ -459,7 +457,7 @@ body {
     color: white;
     font-weight: 700;
     font-size: 1rem;
-    box-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
 }
 .timeline-item:nth-child(even) .timeline-dot {
     left: -18px;
@@ -468,10 +466,14 @@ body {
     padding: 22px;
     border-radius: 16px;
 }
+.timeline-content:hover {
+    box-shadow: var(--card-shadow-hover);
+    border-color: rgba(15, 23, 42, 0.12);
+}
 .timeline-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-primary);
     margin-bottom: 8px;
 }
 .timeline-text {
@@ -503,7 +505,7 @@ body {
 .quiz-progress-bar {
     width: 100%;
     height: 6px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(15, 23, 42, 0.05);
     border-radius: 3px;
     margin-bottom: 24px;
     overflow: hidden;
@@ -527,7 +529,7 @@ body {
     font-weight: 600;
     margin: 16px 0 24px;
     line-height: 1.4;
-    color: white;
+    color: var(--text-primary);
 }
 .quiz-options {
     display: flex;
@@ -541,19 +543,18 @@ body {
     gap: 14px;
     padding: 15px 20px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.02);
+    background: white;
     border: 1px solid var(--border-glass);
     cursor: pointer;
     transition: all 0.25s ease;
 }
 .quiz-option:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(15, 23, 42, 0.01);
+    border-color: rgba(15, 23, 42, 0.15);
 }
 .quiz-option.selected {
-    background: rgba(244, 63, 94, 0.08);
+    background: rgba(244, 63, 94, 0.04);
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(244, 63, 94, 0.1);
 }
 .quiz-radio {
     width: 18px;
@@ -579,11 +580,11 @@ body {
 }
 .quiz-option-text {
     font-size: 0.92rem;
-    color: var(--text-muted);
+    color: var(--text-primary);
 }
 .quiz-option.selected .quiz-option-text {
-    color: white;
-    font-weight: 500;
+    color: var(--text-primary);
+    font-weight: 600;
 }
 .quiz-controls {
     display: flex;
@@ -596,14 +597,14 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-left: 1px solid rgba(255,255,255,0.05);
+    border-left: 1px solid rgba(15,23,42,0.06);
     padding-left: 20px;
 }
 .chart-title {
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 20px;
-    color: white;
+    color: var(--text-primary);
 }
 .chart-wrapper {
     width: 280px;
@@ -611,12 +612,12 @@ body {
     position: relative;
 }
 .radar-grid {
-    stroke: rgba(255, 255, 255, 0.08);
+    stroke: rgba(15, 23, 42, 0.08);
     stroke-width: 1;
     fill: none;
 }
 .radar-axis {
-    stroke: rgba(255, 255, 255, 0.12);
+    stroke: rgba(15, 23, 42, 0.12);
     stroke-width: 1;
 }
 .radar-label {
@@ -627,10 +628,10 @@ body {
     font-family: var(--font-sans);
 }
 .radar-polygon {
-    fill: rgba(244, 63, 94, 0.2);
+    fill: rgba(244, 63, 94, 0.15);
     stroke: var(--primary);
     stroke-width: 2;
-    filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.3));
+    filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.15));
 }
 .radar-point {
     fill: var(--secondary);
@@ -674,7 +675,7 @@ body {
 }
 
 .chat-sidebar {
-    background: rgba(10, 15, 30, 0.6);
+    background: rgba(15, 23, 42, 0.02);
     border-right: 1px solid var(--border-glass);
     display: flex;
     flex-direction: column;
@@ -684,7 +685,7 @@ body {
     border-bottom: 1px solid var(--border-glass);
 }
 .sidebar-header h4 {
-    color: white;
+    color: var(--text-primary);
     font-size: 1rem;
     font-weight: 700;
     display: flex;
@@ -709,11 +710,11 @@ body {
     transition: all 0.2s;
 }
 .history-item:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(15, 23, 42, 0.02);
 }
 .history-item.active {
-    background: rgba(244, 63, 94, 0.06);
-    border: 1px solid rgba(244, 63, 94, 0.15);
+    background: rgba(244, 63, 94, 0.05);
+    border: 1px solid rgba(244, 63, 94, 0.1);
 }
 .history-icon {
     font-size: 1.1rem;
@@ -725,7 +726,7 @@ body {
 .history-title {
     font-size: 0.85rem;
     font-weight: 600;
-    color: white;
+    color: var(--text-primary);
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -744,7 +745,8 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255,255,255,0.02);
+    background: white;
+    border: 1px solid var(--border-glass);
     padding: 8px 12px;
     border-radius: 6px;
 }
@@ -760,7 +762,7 @@ body {
 .chat-main-window {
     display: flex;
     flex-direction: column;
-    background: rgba(8, 12, 24, 0.4);
+    background: rgba(255, 255, 255, 0.4);
     position: relative;
 }
 .chat-window-header {
@@ -769,24 +771,24 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(10, 15, 30, 0.3);
+    background: rgba(255, 255, 255, 0.3);
 }
 .chat-window-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 1.2rem;
-    box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+    box-shadow: 0 4px 10px rgba(244, 63, 94, 0.2);
 }
 .chat-window-name {
     font-size: 0.95rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-primary);
 }
 .chat-window-status {
     font-size: 0.75rem;
@@ -809,17 +811,18 @@ body {
 }
 .chat-bubble.bot {
     align-self: flex-start;
-    background: rgba(255,255,255,0.04);
+    background: white;
     border: 1px solid var(--border-glass);
     color: var(--text-primary);
     border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.01);
 }
 .chat-bubble.user {
     align-self: flex-end;
     background: var(--primary);
     color: white;
     border-bottom-right-radius: 4px;
-    box-shadow: 0 5px 15px rgba(244,63,94,0.25);
+    box-shadow: 0 4px 12px rgba(244,63,94,0.2);
 }
 .chat-bubble strong {
     color: white;
@@ -830,7 +833,7 @@ body {
     display: flex;
     gap: 4px;
     padding: 14px 18px;
-    background: rgba(255, 255, 255, 0.04);
+    background: white;
     border: 1px solid var(--border-glass);
     border-radius: 16px;
     border-bottom-left-radius: 4px;
@@ -853,13 +856,13 @@ body {
     padding: 10px 24px;
     overflow-x: auto;
     white-space: nowrap;
-    background: rgba(10, 15, 30, 0.2);
+    background: rgba(15, 23, 42, 0.01);
 }
 .chat-window-suggestions::-webkit-scrollbar {
     height: 4px;
 }
 .main-suggestion-btn {
-    background: rgba(255, 255, 255, 0.03);
+    background: white;
     border: 1px solid var(--border-glass);
     padding: 8px 14px;
     border-radius: 20px;
@@ -870,25 +873,25 @@ body {
     flex-shrink: 0;
 }
 .main-suggestion-btn:hover {
-    background: rgba(244,63,94,0.1);
+    background: rgba(244,63,94,0.05);
     border-color: var(--primary);
-    color: white;
+    color: var(--primary);
 }
 
 .chat-window-input-area {
     display: flex;
     padding: 16px 24px;
-    background: rgba(10, 15, 30, 0.5);
+    background: white;
     border-top: 1px solid var(--border-glass);
     gap: 12px;
 }
 #main-chat-input {
     flex-grow: 1;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(15, 23, 42, 0.01);
     border: 1px solid var(--border-glass);
     border-radius: 24px;
     padding: 12px 20px;
-    color: white;
+    color: var(--text-primary);
     font-size: 0.9rem;
     outline: none;
     transition: border-color 0.3s;
@@ -897,7 +900,7 @@ body {
     border-color: var(--primary);
 }
 #main-chat-send-btn {
-    background: linear-gradient(135deg, var(--primary), #e11d48);
+    background: var(--primary);
     border: none;
     color: white;
     font-weight: 600;
@@ -908,6 +911,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: transform 0.2s;
+    box-shadow: 0 4px 10px rgba(244,63,94,0.15);
 }
 #main-chat-send-btn:hover {
     transform: scale(1.03);
@@ -925,10 +929,11 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    background: rgba(255,255,255,0.02);
+    background: white;
     padding: 15px 25px;
     border-radius: 12px;
     border: 1px solid var(--border-glass);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
 }
 .game-score {
     font-size: 1.1rem;
@@ -977,26 +982,26 @@ body {
 
 /* Card Cover (Front Face) */
 .game-card-front {
-    background: radial-gradient(circle at center, #1e1b4b 0%, #090514 100%);
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
     color: var(--primary);
     font-size: 2.2rem;
     box-shadow: var(--card-shadow);
 }
 .game-card:hover .game-card-front {
     border-color: var(--primary);
-    box-shadow: var(--neon-glow);
 }
 
 /* Card Content (Back Face) */
 .game-card-back {
-    background: rgba(255, 255, 255, 0.04);
+    background: white;
     transform: rotateY(180deg);
-    color: white;
+    color: var(--text-primary);
+    box-shadow: var(--card-shadow);
 }
 .game-card.matched .game-card-back {
     border-color: var(--secondary);
     box-shadow: var(--neon-glow-gold);
-    background: rgba(245, 158, 11, 0.05);
+    background: rgba(245, 158, 11, 0.03);
 }
 
 .card-type-label {
@@ -1014,7 +1019,7 @@ body {
 .card-value {
     font-size: 1.4rem;
     font-weight: 800;
-    color: white;
+    color: var(--text-primary);
 }
 .card-desc {
     font-size: 0.8rem;
@@ -1029,7 +1034,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(11, 15, 25, 0.9);
+    background: rgba(248, 250, 252, 0.95);
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -1055,12 +1060,12 @@ body {
     font-size: 3.5rem;
     color: var(--secondary);
     margin-bottom: 20px;
-    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.4));
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.2));
 }
 .success-box h3 {
     font-size: 1.6rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-primary);
     margin-bottom: 12px;
 }
 .success-box p {
@@ -1070,7 +1075,7 @@ body {
     margin-bottom: 24px;
 }
 .success-stats {
-    background: rgba(255,255,255,0.02);
+    background: white;
     border: 1px solid var(--border-glass);
     padding: 16px;
     border-radius: 10px;
@@ -1091,7 +1096,7 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 20px;
-    color: white;
+    color: var(--text-primary);
 }
 .about-info p {
     color: var(--text-muted);
@@ -1110,7 +1115,7 @@ body {
     font-size: 0.9rem;
 }
 .project-details strong {
-    color: white;
+    color: var(--text-primary);
 }
 .team-grid {
     display: flex;
@@ -1122,15 +1127,16 @@ body {
     align-items: center;
     gap: 16px;
     padding: 16px;
-    background: rgba(255,255,255,0.02);
+    background: white;
     border: 1px solid var(--border-glass);
     border-radius: 12px;
+    box-shadow: var(--card-shadow);
 }
 .member-avatar {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: rgba(244, 63, 94, 0.1);
+    background: rgba(244, 63, 94, 0.08);
     color: var(--primary);
     display: flex;
     align-items: center;
@@ -1139,7 +1145,7 @@ body {
 }
 .member-info h4 {
     font-size: 0.95rem;
-    color: white;
+    color: var(--text-primary);
     margin-bottom: 2px;
 }
 .member-info p {
@@ -1167,7 +1173,19 @@ body {
 }
 @keyframes pulseGlow {
     0%, 100% { opacity: 0.5; box-shadow: 0 0 2px var(--secondary); }
-    50% { opacity: 1; box-shadow: 0 0 8px var(--secondary); }
+    50% { opacity: 1; box-shadow: 0 0 6px var(--secondary); }
+}
+
+/* --- Scroll triggered Viewport Animations --- */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+                transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.animate-on-scroll.appear {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* --- Media Queries (Mobile responsiveness) --- */
@@ -1197,7 +1215,7 @@ body {
     }
     .chart-panel {
         border-left: none;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 1px solid rgba(15,23,42,0.06);
         padding-left: 0;
         padding-top: 30px;
     }
@@ -1206,7 +1224,7 @@ body {
         height: 520px;
     }
     .chat-sidebar {
-        display: none; /* Hide history panel on tablets and mobiles */
+        display: none;
     }
     .game-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1237,7 +1255,7 @@ body {
         gap: 15px;
     }
     .app-main {
-        margin-top: 140px; /* Header Offset for wrapped header on mobile */
+        margin-top: 140px;
     }
     .nav {
         flex-wrap: wrap;
