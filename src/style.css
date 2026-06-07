@@ -1162,6 +1162,378 @@ body {
     font-size: 0.82rem;
 }
 
+/* --- Section badges --- */
+.section-badge {
+    background: rgba(244, 63, 94, 0.08);
+    color: var(--primary);
+    border: 1px solid rgba(244, 63, 94, 0.15);
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --- Đặt vấn đề (Problem Statement) --- */
+.problem-container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 40px;
+}
+.problem-intro-row {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    margin-bottom: 35px;
+    align-items: center;
+}
+.problem-main-question {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+.question-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(244, 63, 94, 0.08);
+    color: var(--primary);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.problem-main-question h3 {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    line-height: 1.35;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.problem-intro-text p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+.comparison-card {
+    padding: 28px;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid var(--border-glass);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.comparison-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow-hover);
+}
+.comp-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.comp-icon {
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+}
+.alert-card .comp-icon { color: hsl(14, 90%, 55%); }
+.success-card .comp-icon { color: hsl(145, 80%, 45%); }
+.comparison-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.comparison-card ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.comparison-card ul li {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    position: relative;
+    padding-left: 20px;
+}
+.comparison-card ul li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+.alert-card ul li::before { color: hsl(14, 90%, 55%); }
+.success-card ul li::before { color: hsl(145, 80%, 45%); }
+
+.hcm-insight-box {
+    background: rgba(15, 23, 42, 0.02);
+    border-left: 4px solid var(--secondary);
+    padding: 20px 24px;
+    border-radius: 4px 12px 12px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.insight-badge {
+    color: var(--secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.hcm-insight-box p {
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+.hcm-insight-box p strong {
+    color: var(--primary);
+}
+
+/* --- Bối cảnh hiện đại (Opportunity vs Challenge Matrix) --- */
+.matrix-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+.matrix-card {
+    padding: 35px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.matrix-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 16px;
+}
+.matrix-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+.opt-card .matrix-icon {
+    background: hsl(145, 80%, 45%);
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2);
+}
+.chal-card .matrix-icon {
+    background: hsl(38, 90%, 45%);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+}
+.matrix-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.matrix-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.matrix-list li {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 20px;
+}
+.matrix-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 600;
+}
+.matrix-list li strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* --- Callout Box --- */
+.callout-banner {
+    max-width: 950px;
+    margin: 40px auto 0;
+    background: var(--bg-glass-heavy);
+    padding: 24px 30px;
+    border-radius: 16px;
+    border-left: 4px solid var(--primary);
+    box-shadow: var(--card-shadow);
+}
+.callout-content {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.callout-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(244, 63, 94, 0.08);
+    color: var(--primary);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.callout-content p {
+    color: var(--text-primary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0;
+}
+.callout-content p strong {
+    color: var(--primary);
+}
+
+/* --- Giải pháp 4 Phân Khu (Action Grid) --- */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+.action-card {
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.action-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.action-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: rgba(15, 23, 42, 0.06);
+    font-family: var(--font-sans);
+}
+.action-card:hover .action-num {
+    color: var(--primary-glow);
+}
+.action-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid var(--border-glass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.01);
+    transition: all 0.3s ease;
+}
+.action-card:hover .action-icon-circle {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(244, 63, 94, 0.15);
+}
+.action-card h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.action-bullet-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.action-bullet-list li {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    position: relative;
+    padding-left: 18px;
+}
+.action-bullet-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+/* --- Kết luận (Conclusion Quote Card) --- */
+.conclusion-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.quote-card {
+    padding: 40px;
+    border-radius: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+.quote-lotus {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(244, 63, 94, 0.08);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+.conclusion-quote {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+.quote-author {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--secondary);
+}
+
 /* --- Keyframe Animations --- */
 @keyframes rotateCompass {
     from { transform: rotate(0deg); }
@@ -1205,6 +1577,24 @@ body {
     }
     .grid-container {
         grid-template-columns: 1fr;
+    }
+    .problem-container {
+        padding: 24px;
+    }
+    .problem-intro-row,
+    .comparison-grid,
+    .matrix-container,
+    .action-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .callout-banner {
+        padding: 20px;
+    }
+    .callout-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
     .tilt-card {
         height: 320px;
