@@ -4,7 +4,7 @@ import './style.css';
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     init3DTilt();
-    initTabNavigation();
+    initSmoothScroll();
     initQuiz();
     initChatbot();
     initMinigame();
@@ -13,39 +13,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. Tab Navigation Management (SPA Architecture)
+   1. Smooth Scroll Navigation Management
    ========================================================================== */
-function initTabNavigation(): void {
-    const tabs = document.querySelectorAll<HTMLButtonElement>('.nav-tab');
-    const contents = document.querySelectorAll<HTMLElement>('.tab-content');
+function initSmoothScroll(): void {
+    const navTabs = document.querySelectorAll<HTMLButtonElement>('.nav-tab');
     const switchBtns = document.querySelectorAll<HTMLButtonElement>('.switch-tab-btn');
 
-    function switchTab(tabId: string): void {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-
-        const targetTab = document.querySelector<HTMLButtonElement>(`.nav-tab[data-tab="${tabId}"]`);
-        const targetContent = document.getElementById(tabId);
-
-        if (targetTab && targetContent) {
-            targetTab.classList.add('active');
-            targetContent.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    function scrollToSection(targetId: string): void {
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
-    tabs.forEach(tab => {
+    navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetId = tab.getAttribute('data-tab');
-            if (targetId) switchTab(targetId);
+            const targetId = tab.getAttribute('data-scroll-to');
+            if (targetId) scrollToSection(targetId);
         });
     });
 
     switchBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            if (targetId) switchTab(targetId);
+            const targetId = btn.getAttribute('data-scroll-to');
+            if (targetId) scrollToSection(targetId);
         });
+    });
+
+    // Intersection Observer for highlighting nav menu
+    const sections = document.querySelectorAll<HTMLElement>('.page-section');
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+    };
+
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                const id = entry.target.getAttribute('id');
+                const activeNav = document.querySelector<HTMLButtonElement>(`.nav-tab[data-scroll-to='${id}']`);
+                if (activeNav) {
+                    activeNav.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        navObserver.observe(section);
     });
 }
 
@@ -509,7 +526,7 @@ function initChatbot(): void {
 
     let botGreetingSent = false;
 
-    const chatTabBtn = document.querySelector('.nav-tab[data-tab="tab-chat"]');
+    const chatTabBtn = document.querySelector('.nav-tab[data-scroll-to="section-chat"]');
     if (chatTabBtn) {
         chatTabBtn.addEventListener('click', () => {
             if (!botGreetingSent) {
