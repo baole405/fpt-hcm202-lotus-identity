@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initChatbot();
     initMinigame();
     initScrollAnimations();
+    initHeroCarousel();
 });
 
 /* ==========================================================================
@@ -778,3 +779,95 @@ function initScrollAnimations(): void {
 
     animElements.forEach(el => observer.observe(el));
 }
+
+/* ==========================================================================
+   8. Landing Page Hero Carousel Controller
+   ========================================================================== */
+function initHeroCarousel(): void {
+    const container = document.getElementById('hero-carousel');
+    const slides = document.querySelectorAll<HTMLElement>('#hero-carousel .carousel-slide');
+    const prevBtn = document.getElementById('hero-carousel-prev');
+    const nextBtn = document.getElementById('hero-carousel-next');
+    const dots = document.querySelectorAll<HTMLButtonElement>('#hero-carousel .carousel-dot');
+    
+    if (!container || slides.length === 0) return;
+    
+    let currentSlide = 0;
+    let autoPlayTimer: number | null = null;
+    const autoPlayInterval = 6000; // 6 seconds
+    
+    function showSlide(index: number): void {
+        if (index >= slides.length) index = 0;
+        if (index < 0) index = slides.length - 1;
+        
+        currentSlide = index;
+        
+        // Update slides active state
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        
+        // Update indicators active state
+        dots.forEach((dot, idx) => {
+            if (idx === currentSlide) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    function nextSlide(): void {
+        showSlide(currentSlide + 1);
+    }
+    
+    function prevSlide(): void {
+        showSlide(currentSlide - 1);
+    }
+    
+    function startAutoPlay(): void {
+        stopAutoPlay();
+        autoPlayTimer = window.setInterval(nextSlide, autoPlayInterval);
+    }
+    
+    function stopAutoPlay(): void {
+        if (autoPlayTimer !== null) {
+            window.clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+        }
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            startAutoPlay(); // Reset auto-play timer
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            startAutoPlay(); // Reset auto-play timer
+        });
+    }
+    
+    dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+            showSlide(idx);
+            startAutoPlay(); // Reset auto-play timer
+        });
+    });
+    
+    // Auto-play control: Pause on mouse enter, resume on mouse leave
+    container.addEventListener('mouseenter', stopAutoPlay);
+    container.addEventListener('mouseleave', startAutoPlay);
+    
+    // Initialize first slide and start timer
+    showSlide(0);
+    startAutoPlay();
+}
+

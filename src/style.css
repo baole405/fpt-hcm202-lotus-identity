@@ -23,7 +23,7 @@
     --neon-glow-gold: 0 0 15px rgba(245, 158, 11, 0.15);
     
     /* Font Families */
-    --font-sans: 'Outfit', sans-serif;
+    --font-sans: 'Montserrat', sans-serif;
     --font-serif: 'Playfair Display', serif;
 }
 
@@ -301,6 +301,170 @@ body {
     pointer-events: none;
     z-index: -1;
 }
+
+/* --- Hero Carousel Styling --- */
+.hero-carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 24px;
+}
+.hero-carousel-track {
+    width: 100%;
+    position: relative;
+}
+.carousel-slide {
+    display: none;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.6s ease-in-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.carousel-slide.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Animate text slightly when slide becomes active */
+.carousel-slide.active .hero-title {
+    animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.carousel-slide.active .hero-subtitle {
+    animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+}
+.carousel-slide.active .hero-actions {
+    animation: slideInText 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+.carousel-slide.active .hero-image-container {
+    animation: slideInImage 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInText {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInImage {
+    from { opacity: 0; transform: scale(0.96) rotate(1deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Control Arrows */
+.carousel-control-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-glass-heavy);
+    border: 1px solid var(--border-glass);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: var(--card-shadow);
+}
+.hero-carousel-container:hover .carousel-control-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+.carousel-control-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
+}
+.carousel-control-btn.prev-btn {
+    left: 20px;
+}
+.carousel-control-btn.next-btn {
+    right: 20px;
+}
+
+/* Indicators (Dots) */
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+.carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.15);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+.carousel-dot.active {
+    width: 28px;
+    border-radius: 5px;
+    background: var(--primary);
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+}
+
+/* Image Placeholders */
+.placeholder-image-wrapper {
+    background: white;
+    aspect-ratio: 4/3;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--card-shadow);
+}
+.image-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 30px;
+}
+.placeholder-icon {
+    font-size: 3.5rem;
+    color: var(--primary);
+    opacity: 0.85;
+    animation: floatIcon 4s ease-in-out infinite;
+}
+.placeholder-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@media (max-width: 768px) {
+    .carousel-control-btn {
+        display: none;
+    }
+    .placeholder-image-wrapper {
+        max-width: 100%;
+        aspect-ratio: 16/9;
+    }
+}
+
 
 .home-section-header {
     text-align: center;

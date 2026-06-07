@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -35,22 +35,97 @@
 
         <!-- TAB 1: HOME (Hero & Philosophy & Roadmap) -->
         <section id="tab-home" class="tab-content active">
-            <!-- Hero Section -->
-            <div class="hero-section">
-                <div class="hero-content">
-                    <div class="badge">Sản phẩm Sáng tạo HCM202 - Nhóm Slow</div>
-                    <h1 class="hero-title">HIỂU MÌNH<br><span class="highlight">ĐỂ VƯƠN RA THẾ GIỚI</span></h1>
-                    <p class="hero-subtitle">Văn hóa, Đạo đức và Con người Việt Nam là chiếc neo vững chắc để thế hệ trẻ tự tin vững bước hội nhập quốc tế.</p>
-                    <div class="hero-actions">
-                        <button class="btn btn-primary switch-tab-btn" data-target="tab-quiz">Bắt Đầu Định Vị <i class="fa-solid fa-arrow-right"></i></button>
-                        <button class="btn btn-secondary switch-tab-btn" data-target="tab-game">Chơi Minigame <i class="fa-solid fa-gamepad"></i></button>
+            <!-- Hero Carousel Section -->
+            <div class="hero-carousel-container" id="hero-carousel">
+                <div class="hero-carousel-track">
+                    
+                    <!-- Slide 1: Hiểu mình -->
+                    <div class="carousel-slide active" data-slide-index="0">
+                        <div class="hero-section">
+                            <div class="hero-content">
+                                <div class="badge">Sản phẩm Sáng tạo HCM202 - Nhóm Slow</div>
+                                <h1 class="hero-title">HIỂU RÕ CHÍNH MÌNH<br><span class="highlight">ĐỊNH VỊ GIÁ TRỊ NỘI TẠI</span></h1>
+                                <p class="hero-subtitle">Nhận thức rõ năng lực chuyên môn, kỹ năng cốt lõi và lấy đạo đức "Cần, Kiệm, Liêm, Chính" làm cái gốc để định hình nhân cách.</p>
+                                <div class="hero-actions">
+                                    <button class="btn btn-primary switch-tab-btn" data-target="tab-quiz">Bắt Đầu Định Vị <i class="fa-solid fa-arrow-right"></i></button>
+                                    <button class="btn btn-secondary switch-tab-btn" data-target="tab-game">Chơi Minigame <i class="fa-solid fa-gamepad"></i></button>
+                                </div>
+                            </div>
+                            <div class="hero-image-container">
+                                <div class="hero-image-wrapper placeholder-image-wrapper">
+                                    <div class="image-placeholder">
+                                        <i class="fa-solid fa-compass-drafting placeholder-icon"></i>
+                                        <span class="placeholder-label">Slide 1: Sơ đồ Định vị Bản thân (Mindmap)</span>
+                                    </div>
+                                    <div class="glow-orb"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Slide 2: Bản sắc và văn hóa -->
+                    <div class="carousel-slide" data-slide-index="1">
+                        <div class="hero-section">
+                            <div class="hero-content">
+                                <div class="badge">Sản phẩm Sáng tạo HCM202 - Nhóm Slow</div>
+                                <h1 class="hero-title">GIỮ VỮNG BẢN SẮC<br><span class="highlight">HỘI NHẬP KHÔNG HÒA TAN</span></h1>
+                                <p class="hero-subtitle">Lấy lòng tự hào dân tộc và di sản văn hóa Việt Nam làm chiếc neo vững chắc giữ mình đứng vững trước làn sóng toàn cầu hóa.</p>
+                                <div class="hero-actions">
+                                    <button class="btn btn-primary switch-tab-btn" data-target="tab-quiz">Bắt Đầu Định Vị <i class="fa-solid fa-arrow-right"></i></button>
+                                    <button class="btn btn-secondary switch-tab-btn" data-target="tab-game">Chơi Minigame <i class="fa-solid fa-gamepad"></i></button>
+                                </div>
+                            </div>
+                            <div class="hero-image-container">
+                                <div class="hero-image-wrapper placeholder-image-wrapper">
+                                    <div class="image-placeholder">
+                                        <i class="fa-solid fa-gopuram placeholder-icon"></i>
+                                        <span class="placeholder-label">Slide 2: Trống Đồng / Hoa Sen cách điệu Line-art</span>
+                                    </div>
+                                    <div class="glow-orb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Vươn ra thế giới -->
+                    <div class="carousel-slide" data-slide-index="2">
+                        <div class="hero-section">
+                            <div class="hero-content">
+                                <div class="badge">Sản phẩm Sáng tạo HCM202 - Nhóm Slow</div>
+                                <h1 class="hero-title">TỰ TIN VỮNG BƯỚC<br><span class="highlight">HỘI NHẬP TOÀN CẦU</span></h1>
+                                <p class="hero-subtitle">Làm chủ công nghệ số, ngoại ngữ và tư duy phản biện để sẵn sàng đóng góp giá trị Việt cho cộng đồng quốc tế.</p>
+                                <div class="hero-actions">
+                                    <button class="btn btn-primary switch-tab-btn" data-target="tab-quiz">Bắt Đầu Định Vị <i class="fa-solid fa-arrow-right"></i></button>
+                                    <button class="btn btn-secondary switch-tab-btn" data-target="tab-game">Chơi Minigame <i class="fa-solid fa-gamepad"></i></button>
+                                </div>
+                            </div>
+                            <div class="hero-image-container">
+                                <div class="hero-image-wrapper placeholder-image-wrapper">
+                                    <div class="image-placeholder">
+                                        <i class="fa-solid fa-earth-asia placeholder-icon"></i>
+                                        <span class="placeholder-label">Slide 3: Mạng lưới kết nối toàn cầu (Global Network)</span>
+                                    </div>
+                                    <div class="glow-orb"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="hero-image-container">
-                    <div class="hero-image-wrapper">
-                        <img src="assets/hero_banner.png" alt="Slow Identity Global Integration" class="hero-image">
-                        <div class="glow-orb"></div>
-                    </div>
+
+                <!-- Carousel Controls -->
+                <button class="carousel-control-btn prev-btn" id="hero-carousel-prev" aria-label="Previous Slide">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control-btn next-btn" id="hero-carousel-next" aria-label="Next Slide">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators" id="hero-carousel-indicators">
+                    <button class="carousel-dot active" data-slide-to="0" aria-label="Slide 1"></button>
+                    <button class="carousel-dot" data-slide-to="1" aria-label="Slide 2"></button>
+                    <button class="carousel-dot" data-slide-to="2" aria-label="Slide 3"></button>
                 </div>
             </div>
 
