@@ -1,7 +1,7 @@
 // --- Lotus Identity by Slow - TypeScript Application Core ---
 
 import './style.css';
-import { loadEmbeddings, generateChatResponse } from './services/chat';
+import { loadEmbeddings, generateChatResponse, generateChatResponseStream } from './services/chat';
 
 document.addEventListener('DOMContentLoaded', async () => {
     initParticles();
@@ -508,6 +508,8 @@ function initChatbot(): void {
     }
 
     let chatHistory: Array<{ role: string; content: string }> = [];
+    // Số lượt hỏi-đáp gần nhất được giữ làm ngữ cảnh (10 lượt = 20 tin nhắn)
+    const MAX_HISTORY_MESSAGES = 20;
     let welcomeShown = false;
 
     // Render the friendly welcome / empty state
@@ -516,7 +518,7 @@ function initChatbot(): void {
         messagesContainer.innerHTML = `
             <div class="chat-welcome" id="chat-welcome">
                 <div class="chat-welcome-icon"><i class="fa-solid fa-robot"></i></div>
-                <h3>Xin chào! Mình là Slow AI Mentor 🌸</h3>
+                <h3>Xin chào! Mình là Slow AI Assistant 🌸</h3>
                 <p>Mình ở đây để cùng bạn trò chuyện về văn hóa, đạo đức và hành trình phát triển bản thân theo tư tưởng Hồ Chí Minh. Hãy chọn một câu hỏi gợi ý bên dưới hoặc tự đặt câu hỏi nhé!</p>
             </div>`;
         welcomeShown = true;
@@ -543,15 +545,93 @@ function initChatbot(): void {
         chatHistory.push({ role: "user", content: displayMsg });
         showTypingIndicator();
 
-        try {
-            const response = await generateChatResponse(displayMsg, chatHistory);
+        const history = chatHistory.slice(-MAX_HISTORY_MESSAGES);
+
+        // Typewriter state. The network fills `target`; an animation loop reveals
+        // it at a steady speed so the text "morphs" in smoothly, independent of
+        // how fast/bursty the API chunks arrive.
+        const tw: {
+            bubble: HTMLDivElement | null;
+            target: string;
+            shown: number;
+            finished: boolean;
+            raf: number;
+            lastTs: number;
+        } = { bubble: null, target: '', shown: 0, finished: false, raf: 0, lastTs: 0 };
+
+        // Characters revealed per second — lower = slower/calmer morph effect.
+        const CHARS_PER_SECOND = 45;
+
+        const renderShown = (): void => {
+            if (!tw.bubble) return;
+            tw.bubble.innerHTML = formatBotText(tw.target.slice(0, Math.floor(tw.shown)));
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        };
+
+        const startLoop = (): void => {
+            if (tw.raf) return;
+            const tick = (ts: number): void => {
+                if (!tw.lastTs) tw.lastTs = ts;
+                const dt = (ts - tw.lastTs) / 1000;
+                tw.lastTs = ts;
+
+                if (tw.shown < tw.target.length) {
+                    tw.shown = Math.min(tw.target.length, tw.shown + CHARS_PER_SECOND * dt);
+                    renderShown();
+                }
+
+                // Stop only once the stream is done AND all text is revealed.
+                if (tw.finished && tw.shown >= tw.target.length) {
+                    tw.shown = tw.target.length;
+                    renderShown();
+                    if (tw.bubble) tw.bubble.classList.remove('streaming');
+                    tw.raf = 0;
+                    return;
+                }
+                tw.raf = requestAnimationFrame(tick);
+            };
+            tw.raf = requestAnimationFrame(tick);
+        };
+
+        const ensureBubble = (): void => {
+            if (tw.bubble) return;
             removeTypingIndicator();
-            appendMessage(response, "bot");
+            tw.bubble = appendMessage('', "bot");
+            if (tw.bubble) tw.bubble.classList.add('streaming');
+            startLoop();
+        };
+
+        // Each streamed chunk just updates the reveal target; the loop animates.
+        const onChunk = (fullText: string): void => {
+            ensureBubble();
+            tw.target = fullText;
+        };
+
+        const finalize = (response: string): void => {
+            ensureBubble();
+            tw.target = response;
+            tw.finished = true;
+            startLoop();
             chatHistory.push({ role: "assistant", content: response });
-        } catch (error) {
-            removeTypingIndicator();
-            appendMessage("Xin lỗi, có lỗi khi xử lý câu hỏi. Vui lòng thử lại.", "bot");
-            console.error("Chat error:", error);
+        };
+
+        try {
+            const response = await generateChatResponseStream(displayMsg, history, onChunk);
+            finalize(response);
+        } catch (streamError) {
+            console.warn("Streaming failed, falling back to non-stream:", streamError);
+            // Fallback to the non-streaming request so a stream failure
+            // (e.g. proxy without SSE support) still returns an answer.
+            try {
+                const response = await generateChatResponse(displayMsg, history);
+                finalize(response);
+            } catch (error) {
+                removeTypingIndicator();
+                appendMessage("Xin lỗi, có lỗi khi xử lý câu hỏi. Vui lòng thử lại.", "bot");
+                console.error("Chat error:", error);
+            }
         }
     }
 
@@ -577,19 +657,68 @@ function initChatbot(): void {
         });
     }
 
-    function appendMessage(text: string, sender: 'bot' | 'user'): void {
-        if (!messagesContainer) return;
+    // Escape HTML so model output can't inject markup.
+    function escapeHtml(s: string): string {
+        return s
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
 
-        const parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        const finalText = parsedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // Inline markdown: **bold**, *italic*, and "quoted phrases" → highlighted.
+    function formatInline(s: string): string {
+        return s
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+            // straight and curly double quotes → highlighted quote
+            .replace(/[“"]([^”"\n]+)[”"]/g, '<strong class="hl-quote">“$1”</strong>');
+    }
+
+    // Convert a bot message (markdown-ish) into formatted HTML blocks:
+    // paragraphs, line breaks, bullet/numbered lists.
+    function formatBotText(raw: string): string {
+        const text = escapeHtml(raw.trim());
+        const blocks = text.split(/\n{2,}/);
+
+        return blocks.map(block => {
+            const lines = block.split('\n').filter(l => l.trim() !== '');
+            if (lines.length === 0) return '';
+
+            const isBullet = lines.every(l => /^\s*[-*•]\s+/.test(l));
+            const isNumbered = lines.every(l => /^\s*\d+[.)]\s+/.test(l));
+
+            if (isBullet) {
+                return '<ul>' + lines
+                    .map(l => `<li>${formatInline(l.replace(/^\s*[-*•]\s+/, ''))}</li>`)
+                    .join('') + '</ul>';
+            }
+            if (isNumbered) {
+                return '<ol>' + lines
+                    .map(l => `<li>${formatInline(l.replace(/^\s*\d+[.)]\s+/, ''))}</li>`)
+                    .join('') + '</ol>';
+            }
+            return '<p>' + lines.map(formatInline).join('<br>') + '</p>';
+        }).join('');
+    }
+
+    // Create a message row and return its bubble element (for live updates).
+    function appendMessage(text: string, sender: 'bot' | 'user'): HTMLDivElement | null {
+        if (!messagesContainer) return null;
 
         const row = document.createElement('div');
         row.className = `chat-row ${sender}`;
         const avatarIcon = sender === 'bot' ? 'fa-robot' : 'fa-user';
-        row.innerHTML =
-            `<div class="chat-row-avatar"><i class="fa-solid ${avatarIcon}"></i></div>` +
-            `<div class="chat-bubble ${sender}">${finalText}</div>`;
 
+        const avatar = document.createElement('div');
+        avatar.className = 'chat-row-avatar';
+        avatar.innerHTML = `<i class="fa-solid ${avatarIcon}"></i>`;
+
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble ${sender}`;
+        bubble.innerHTML = sender === 'bot' ? formatBotText(text) : escapeHtml(text);
+
+        row.appendChild(avatar);
+        row.appendChild(bubble);
         messagesContainer.appendChild(row);
 
         // Auto-scroll to bottom with delay to ensure render
@@ -598,6 +727,8 @@ function initChatbot(): void {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }, 0);
+
+        return bubble;
     }
 
     function showTypingIndicator(): void {

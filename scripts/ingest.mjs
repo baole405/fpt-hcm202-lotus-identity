@@ -193,7 +193,7 @@ async function collectSources() {
 async function embedText(text) {
   const apiKey = getApiKey()
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${EMBEDDING_MODEL}:embedContent?key=${apiKey}`,
+    `https://api.shopaikey.com/v1beta/models/${EMBEDDING_MODEL}:embedContent?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

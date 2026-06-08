@@ -1105,6 +1105,30 @@ body {
 .chat-bubble.user strong { color: white; }
 .chat-bubble.bot strong { color: var(--primary); }
 
+/* Formatted bot message blocks */
+.chat-bubble.bot p { margin: 0 0 10px; }
+.chat-bubble.bot p:last-child { margin-bottom: 0; }
+.chat-bubble.bot ul,
+.chat-bubble.bot ol { margin: 8px 0; padding-left: 22px; }
+.chat-bubble.bot li { margin: 4px 0; }
+.chat-bubble.bot .hl-quote {
+    color: var(--primary);
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* Blinking cursor while the answer is streaming in */
+.chat-bubble.bot.streaming::after {
+    content: '▋';
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--primary);
+    animation: chat-cursor-blink 1s step-end infinite;
+}
+@keyframes chat-cursor-blink {
+    50% { opacity: 0; }
+}
+
 /* Standalone chat typing marker */
 .chat-typing-indicator {
     display: flex;
