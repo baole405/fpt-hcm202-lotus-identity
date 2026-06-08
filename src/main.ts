@@ -1,11 +1,14 @@
 // --- Lotus Identity by Slow - TypeScript Application Core ---
-import './style.css';
 
-document.addEventListener('DOMContentLoaded', () => {
+import './style.css';
+import { loadEmbeddings, generateChatResponse } from './services/chat';
+
+document.addEventListener('DOMContentLoaded', async () => {
     initParticles();
     init3DTilt();
     initTabNavigation();
     initQuiz();
+    await loadEmbeddings();
     initChatbot();
     initMinigame();
     initScrollAnimations();
@@ -472,31 +475,8 @@ function renderRadarChart(scores: UserScores): void {
 interface ISVGElement extends HTMLElement {}
 
 /* ==========================================================================
-   5. Standalone AI Chatbot Interface Simulator
+   5. Standalone AI Chatbot Interface with Gemini API
    ========================================================================== */
-interface QAItem {
-    keywords: string[];
-    response: string;
-}
-
-const CHAT_QA_DATABASE: QAItem[] = [
-    {
-        keywords: ["văn hóa", "bản sắc", "giữ bản sắc", "hòa tan", "bảo tồn"],
-        response: "Giữ vững bản sắc văn hóa Việt Nam chính là chiếc neo giúp bạn không bị hòa tan khi bước vào dòng chảy toàn cầu. Hồ Chí Minh chỉ ra văn hóa là nền tảng tinh thần của xã hội. Sinh viên FPT cần lấy lòng tự tôn dân tộc và chuẩn mực văn hóa ứng xử Việt Nam làm nền móng tự tin giao tiếp thế giới."
-    },
-    {
-        keywords: ["đạo đức", "đóng vai trò gì", "đạo đức cách mạng", "cần kiệm", "chính trực"],
-        response: "Bác Hồ nhấn mạnh: 'Có tài mà không có đức là người vô dụng, có đức mà không có tài thì làm việc gì cũng khó'. Trong bối cảnh hội nhập, đạo đức đóng vai trò làm thước đo độ uy tín của cá nhân và doanh nghiệp Việt Nam trên trường quốc tế. Việc thực hành trung thực và tôn trọng cam kết là chìa khóa thành công."
-    },
-    {
-        keywords: ["tự học", "học ngoại ngữ", "bác hồ tự học", "phát triển bản thân"],
-        response: "Hành trình vươn ra thế giới của Nguyễn Ái Quốc là một tấm gương tự học vĩ đại. Bác học ngoại ngữ mọi nơi: học từ đồng nghiệp, viết chữ lên cánh tay khi làm bếp. Ngày nay, sinh viên FPT có đầy đủ công nghệ AI hỗ trợ, tinh thần tự học càng đóng vai trò định đoạt tốc độ thích nghi của bạn."
-    },
-    {
-        keywords: ["sốc văn hóa", "áp lực", "khó khăn", "tự tin", "vấp ngã"],
-        response: "Khi gặp sốc văn hóa hay áp lực hội nhập, hãy nhớ câu thơ của Bác: 'Gian nan rèn luyện mới thành công'. Xem khó khăn là thuốc thử rèn ý chí bản lĩnh. Hãy chủ động giao tiếp, chia sẻ văn hóa song phương và giữ một thái độ cởi mở để tiếp thu tri thức mới."
-    }
-];
 
 function initChatbot(): void {
     const messagesContainer = document.getElementById('main-chat-messages');
@@ -504,94 +484,102 @@ function initChatbot(): void {
     const sendBtn = document.getElementById('main-chat-send-btn') as HTMLButtonElement | null;
     const suggestionsContainer = document.getElementById('main-chat-suggestions');
 
-    if (!messagesContainer || !inputField || !sendBtn || !suggestionsContainer) return;
-
-    let botGreetingSent = false;
-
-    const chatTabBtn = document.querySelector('.nav-tab[data-tab="tab-chat"]');
-    if (chatTabBtn) {
-        chatTabBtn.addEventListener('click', () => {
-            if (!botGreetingSent) {
-                sendGreeting();
-            }
-        });
+    if (!messagesContainer || !inputField || !sendBtn) {
+        console.warn('Chat elements not found');
+        return;
     }
 
-    function sendGreeting(): void {
-        botGreetingSent = true;
-        showTypingIndicator();
-        
-        setTimeout(() => {
-            removeTypingIndicator();
-            appendMessage("Xin chào! Tôi là **Lotus AI Mentor**. Tôi ở đây để hỗ trợ nhóm **Slow** định vị bản sắc và rèn luyện kỹ năng phát triển bản thân theo tư tưởng Hồ Chí Minh. Thầy **Nguyễn Văn Bình** và các bạn sinh viên có câu hỏi gì không?", "bot");
-            renderSuggestions();
-        }, 1000);
+    let chatHistory: Array<{ role: string; content: string }> = [];
+    let welcomeShown = false;
+
+    // Render the friendly welcome / empty state
+    function renderWelcome(): void {
+        if (!messagesContainer) return;
+        messagesContainer.innerHTML = `
+            <div class="chat-welcome" id="chat-welcome">
+                <div class="chat-welcome-icon"><i class="fa-solid fa-robot"></i></div>
+                <h3>Xin chào! Mình là Slow AI Mentor 🌸</h3>
+                <p>Mình ở đây để cùng bạn trò chuyện về văn hóa, đạo đức và hành trình phát triển bản thân theo tư tưởng Hồ Chí Minh. Hãy chọn một câu hỏi gợi ý bên dưới hoặc tự đặt câu hỏi nhé!</p>
+            </div>`;
+        welcomeShown = true;
     }
 
-    const suggestions = [
-        { label: "Làm sao giữ bản sắc Việt?", query: "giữ bản sắc văn hóa" },
-        { label: "Đạo đức đóng vai trò gì khi hội nhập?", query: "đạo đức đóng vai trò gì" },
-        { label: "Bác Hồ tự học ngoại ngữ thế nào?", query: "bác hồ tự học ngoại ngữ" },
-        { label: "Làm thế nào vượt qua khó khăn sốc văn hóa?", query: "khó khăn sốc văn hóa áp lực" }
-    ];
-
-    function renderSuggestions(): void {
-        if (!suggestionsContainer) return;
-        suggestionsContainer.innerHTML = '';
-        suggestions.forEach(s => {
-            const btn = document.createElement('button');
-            btn.className = 'main-suggestion-btn';
-            btn.textContent = s.label;
-            btn.addEventListener('click', () => {
-                handleUserMessage(s.label, s.query);
-            });
-            suggestionsContainer.appendChild(btn);
-        });
+    function clearWelcome(): void {
+        if (welcomeShown && messagesContainer) {
+            const welcome = document.getElementById('chat-welcome');
+            if (welcome) welcome.remove();
+            welcomeShown = false;
+        }
     }
 
-    function handleUserMessage(displayMsg: string, searchTerms: string = ""): void {
+    renderWelcome();
+
+    async function handleUserMessage(displayMsg: string): Promise<void> {
         if (!displayMsg.trim() || !inputField || !messagesContainer) return;
 
+        clearWelcome();
+        if (suggestionsContainer) suggestionsContainer.style.display = 'none';
         appendMessage(displayMsg, "user");
         inputField.value = '';
-        
-        const searchQuery = (searchTerms || displayMsg).toLowerCase();
-        
-        showTypingIndicator();
-        
-        let matchedResponse = "Câu hỏi của nhóm Slow rất thú vị. Theo tư tưởng Hồ Chí Minh, 'Hiểu mình' chính là tiền đề then chốt của sự tự giác ngộ. Văn hóa và đạo đức giống như chiếc la bàn điều hướng cuộc sống của chúng ta. Bạn có muốn tìm hiểu kỹ hơn về chuẩn mực 'Cần Kiệm Liêm Chính' không?";
-        
-        for (const item of CHAT_QA_DATABASE) {
-            if (item.keywords.some(kw => searchQuery.includes(kw))) {
-                matchedResponse = item.response;
-                break;
-            }
-        }
 
-        setTimeout(() => {
+        chatHistory.push({ role: "user", content: displayMsg });
+        showTypingIndicator();
+
+        try {
+            const response = await generateChatResponse(displayMsg, chatHistory);
             removeTypingIndicator();
-            appendMessage(matchedResponse, "bot");
-        }, 1200);
+            appendMessage(response, "bot");
+            chatHistory.push({ role: "assistant", content: response });
+        } catch (error) {
+            removeTypingIndicator();
+            appendMessage("Xin lỗi, có lỗi khi xử lý câu hỏi. Vui lòng thử lại.", "bot");
+            console.error("Chat error:", error);
+        }
     }
 
-    sendBtn.addEventListener('click', () => {
+    sendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         if (inputField) handleUserMessage(inputField.value);
     });
 
     inputField.addEventListener('keypress', (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             handleUserMessage(inputField.value);
         }
     });
 
+    // Wire up quick-question suggestion chips
+    if (suggestionsContainer) {
+        suggestionsContainer.querySelectorAll('.main-suggestion-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const question = (btn.textContent || '').trim();
+                if (question) handleUserMessage(question);
+            });
+        });
+    }
+
     function appendMessage(text: string, sender: 'bot' | 'user'): void {
         if (!messagesContainer) return;
-        const msg = document.createElement('div');
-        msg.className = `chat-bubble ${sender}`;
+
         const parsedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        msg.innerHTML = parsedText;
-        messagesContainer.appendChild(msg);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        const finalText = parsedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        const row = document.createElement('div');
+        row.className = `chat-row ${sender}`;
+        const avatarIcon = sender === 'bot' ? 'fa-robot' : 'fa-user';
+        row.innerHTML =
+            `<div class="chat-row-avatar"><i class="fa-solid ${avatarIcon}"></i></div>` +
+            `<div class="chat-bubble ${sender}">${finalText}</div>`;
+
+        messagesContainer.appendChild(row);
+
+        // Auto-scroll to bottom with delay to ensure render
+        setTimeout(() => {
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }, 0);
     }
 
     function showTypingIndicator(): void {
@@ -601,7 +589,12 @@ function initChatbot(): void {
         ind.id = 'main-chat-typing-indicator';
         ind.innerHTML = '<span></span><span></span><span></span>';
         messagesContainer.appendChild(ind);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        setTimeout(() => {
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }, 0);
     }
 
     function removeTypingIndicator(): void {
