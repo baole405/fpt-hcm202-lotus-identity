@@ -6,48 +6,66 @@ import { loadEmbeddings, generateChatResponse } from './services/chat';
 document.addEventListener('DOMContentLoaded', async () => {
     initParticles();
     init3DTilt();
-    initTabNavigation();
+    initSmoothScroll();
     initQuiz();
     await loadEmbeddings();
     initChatbot();
     initMinigame();
     initScrollAnimations();
+    initHeroCarousel();
 });
 
 /* ==========================================================================
-   1. Tab Navigation Management (SPA Architecture)
+   1. Smooth Scroll Navigation Management
    ========================================================================== */
-function initTabNavigation(): void {
-    const tabs = document.querySelectorAll<HTMLButtonElement>('.nav-tab');
-    const contents = document.querySelectorAll<HTMLElement>('.tab-content');
+function initSmoothScroll(): void {
+    const navTabs = document.querySelectorAll<HTMLButtonElement>('.nav-tab');
     const switchBtns = document.querySelectorAll<HTMLButtonElement>('.switch-tab-btn');
 
-    function switchTab(tabId: string): void {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-
-        const targetTab = document.querySelector<HTMLButtonElement>(`.nav-tab[data-tab="${tabId}"]`);
-        const targetContent = document.getElementById(tabId);
-
-        if (targetTab && targetContent) {
-            targetTab.classList.add('active');
-            targetContent.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    function scrollToSection(targetId: string): void {
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
-    tabs.forEach(tab => {
+    navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const targetId = tab.getAttribute('data-tab');
-            if (targetId) switchTab(targetId);
+            const targetId = tab.getAttribute('data-scroll-to');
+            if (targetId) scrollToSection(targetId);
         });
     });
 
     switchBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            if (targetId) switchTab(targetId);
+            const targetId = btn.getAttribute('data-scroll-to');
+            if (targetId) scrollToSection(targetId);
         });
+    });
+
+    // Intersection Observer for highlighting nav menu
+    const sections = document.querySelectorAll<HTMLElement>('.page-section');
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+    };
+
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navTabs.forEach(tab => tab.classList.remove('active'));
+                const id = entry.target.getAttribute('id');
+                const activeNav = document.querySelector<HTMLButtonElement>(`.nav-tab[data-scroll-to='${id}']`);
+                if (activeNav) {
+                    activeNav.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        navObserver.observe(section);
     });
 }
 
@@ -771,3 +789,95 @@ function initScrollAnimations(): void {
 
     animElements.forEach(el => observer.observe(el));
 }
+
+/* ==========================================================================
+   8. Landing Page Hero Carousel Controller
+   ========================================================================== */
+function initHeroCarousel(): void {
+    const container = document.getElementById('hero-carousel');
+    const slides = document.querySelectorAll<HTMLElement>('#hero-carousel .carousel-slide');
+    const prevBtn = document.getElementById('hero-carousel-prev');
+    const nextBtn = document.getElementById('hero-carousel-next');
+    const dots = document.querySelectorAll<HTMLButtonElement>('#hero-carousel .carousel-dot');
+    
+    if (!container || slides.length === 0) return;
+    
+    let currentSlide = 0;
+    let autoPlayTimer: number | null = null;
+    const autoPlayInterval = 6000; // 6 seconds
+    
+    function showSlide(index: number): void {
+        if (index >= slides.length) index = 0;
+        if (index < 0) index = slides.length - 1;
+        
+        currentSlide = index;
+        
+        // Update slides active state
+        slides.forEach((slide, idx) => {
+            if (idx === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        
+        // Update indicators active state
+        dots.forEach((dot, idx) => {
+            if (idx === currentSlide) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+    
+    function nextSlide(): void {
+        showSlide(currentSlide + 1);
+    }
+    
+    function prevSlide(): void {
+        showSlide(currentSlide - 1);
+    }
+    
+    function startAutoPlay(): void {
+        stopAutoPlay();
+        autoPlayTimer = window.setInterval(nextSlide, autoPlayInterval);
+    }
+    
+    function stopAutoPlay(): void {
+        if (autoPlayTimer !== null) {
+            window.clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+        }
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            startAutoPlay(); // Reset auto-play timer
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            startAutoPlay(); // Reset auto-play timer
+        });
+    }
+    
+    dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+            showSlide(idx);
+            startAutoPlay(); // Reset auto-play timer
+        });
+    });
+    
+    // Auto-play control: Pause on mouse enter, resume on mouse leave
+    container.addEventListener('mouseenter', stopAutoPlay);
+    container.addEventListener('mouseleave', startAutoPlay);
+    
+    // Initialize first slide and start timer
+    showSlide(0);
+    startAutoPlay();
+}
+
