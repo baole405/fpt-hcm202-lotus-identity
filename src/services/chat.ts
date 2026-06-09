@@ -69,7 +69,7 @@ export async function embedText(text: string): Promise<number[]> {
 
   try {
     const response = await fetch(
-      `https://api.shopaikey.com/v1beta/models/v1beta/models/gemini-embedding-2-preview:embedContent?key=${apiKey}`,
+      `https://api.shopaikey.com/v1beta/models/gemini-embedding-2-preview:embedContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
